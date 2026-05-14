@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Resume Evaluator</title>
+  </head>
+
+  <body>
+    <header>
+      <h1>Resume Evaluator</h1>
+
+      <nav>
+        <a href="#">Login</a>
+        <a href="#">Register</a>
+      </nav>
+    </header>
+
+    <main>
+      <section>
+        <form id="resume-form">
+          <label for="job-description">Job Description</label>
+          <textarea
+            id="job-description"
+            placeholder="Paste job description here..."
+          ></textarea>
+
+          <label for="custom-prompt">Custom Prompt</label>
+          <textarea
+            id="custom-prompt"
+            placeholder="Write your prompt..."
+          ></textarea>
+
+          <label for="resume">Upload Resume (PDF)</label>
+          <input
+            type="file"
+            id="resume"
+            accept=".pdf"
+          />
+
+          <button type="submit">Submit</button>
+        </form>
+      </section>
+
+      <section>
+        <div id="results">
+          Results will appear here
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

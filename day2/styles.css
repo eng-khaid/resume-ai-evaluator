@@ -1,0 +1,38 @@
+#frist{
+    background-color: blueviolet;
+    color: aliceblue;
+}
+/*put hilit for al lime*/
+p:hover{
+
+    background-color: rgb(142, 169, 50);
+
+}
+h1 {
+    color: green;
+     background-color: rgb(188, 206, 157);
+}
+
+input {
+    border: 3px solid blue;
+}
+.group1:nth-of-type(2) {
+    color: red;
+}
+
+.group1:nth-of-type(3) {
+    color: blue;
+}
+
+.group1:nth-of-type(4) {
+    color: green;
+}
+
+.group1:nth-of-type(5) {
+    color: purple;
+}
+
+.group1:nth-of-type(7) {
+    color: rgb(37, 22, 83);
+    background-color: palegoldenrod;
+}

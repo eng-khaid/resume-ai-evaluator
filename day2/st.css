@@ -1,0 +1,39 @@
+
+.title {
+  color: red;
+  margin-bottom: 10px;
+}
+
+/* القائمة نفسها */
+.box ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* كل عنصر داخل مربع */
+.box ul li {
+  background-color: #e0f2ff;   /* لون خفيف */
+  padding: 10px;
+  margin-bottom: 10px;         /* فراغ بين المربعات */
+  border-radius: 8px;
+  border: 1px solid #90caf9;
+}
+.box ul li {
+  background-color: #dff3ff;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #90caf9;
+
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+
+  /* عشان الحركة تكون ناعمة */
+  transition: 0.3s ease;
+}
+
+/* لما تمرر الماوس */
+.box ul li:hover {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  transform: translateY(-4px);
+}
