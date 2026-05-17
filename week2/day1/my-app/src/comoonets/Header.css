@@ -1,0 +1,30 @@
+.header {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  padding: 30px;
+  text-align: center;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.header button {
+  margin: 8px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.header button:hover {
+  transform: scale(1.05);
+}
+
+.header input {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  margin-top: 10px;
+}
