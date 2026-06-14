@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ Reflex Pro // Neural Tester</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #0b0f19;
+            --bg-card: #151d30;
+            --text-main: #f1f5f9;
+            --text-muted: #64748b;
+            --color-primary: #3b82f6; /* Electric Blue */
+            --color-success: #10b981; /* Mint Green */
+            --color-error: #ef4444;   /* Coral / Red */
+            --color-accent: #f59e0b;  /* Amber */
+            --shadow-glow: rgba(59, 130, 246, 0.2);
+            --transition-speed: 0.3s;
+        }
+
+        [data-theme="light"] {
+            --bg-base: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --color-primary: #2563eb;
+            --color-success: #059669;
+            --color-error: #dc2626;
+            --color-accent: #d97706;
+            --shadow-glow: rgba(37, 99, 235, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+            overflow: hidden;
+        }
+
+        /* Navbar Elements */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.03);
+            backdrop-filter: blur(5px);
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+            background: linear-gradient(45deg, var(--color-primary), #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .high-score-badge {
+            background: var(--bg-card);
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: 1px solid rgba(250,250,250,0.05);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            color: var(--color-accent);
+        }
+
+        .theme-btn {
+            background: var(--bg-card);
+            border: 1px solid rgba(250,250,250,0.05);
+            color: var(--text-main);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+
+        .theme-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* Full Screen Click Arena */
+        .game-arena {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            transition: background-color 0.1s ease;
+            padding: 20px;
+        }
+
+        /* Dynamic States for Arena */
+        .game-arena.state-waiting {
+            background-color: rgba(239, 68, 68, 0.05);
+            animation: pulseBg 2.5s infinite;
+        }
+
+        .game-arena.state-go {
+            background-color: var(--color-success) !important;
+            color: #ffffff !important;
+            animation: flashEffect 0.4s ease-out;
+        }
+        
+        .game-arena.state-go .text-muted,
+        .game-arena.state-go .round-indicator {
+            color: rgba(255, 255, 255, 0.8) !important;
+        }
+
+        .center-content {
+            text-align: center;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .main-instruction {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            letter-spacing: -1px;
+            line-height: 1.2;
+        }
+
+        .sub-instruction {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        /* Round Progress Indicators */
+        .progress-container {
+            margin-top: 40px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 2px solid var(--text-muted);
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            border-color: var(--color-primary);
+            background: var(--color-primary);
+            box-shadow: 0 0 10px var(--color-primary);
+        }
+
+        .dot.done {
+            border-color: var(--color-success);
+            background: var(--color-success);
+        }
+
+        .dot.error {
+            border-color: var(--color-error);
+            background: var(--color-error);
+        }
+
+        /* Overlay Cards (Countdown, Results) */
+        .overlay-card {
+            position: absolute;
+            background: var(--bg-card);
+            border-radius: 24px;
+            padding: 40px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3), 0 0 50px var(--shadow-glow);
+            text-align: center;
+            z-index: 20;
+            border: 1px solid rgba(250,250,250,0.05);
+            display: none;
+            pointer-events: auto;
+        }
+
+        .overlay-card.active {
+            display: block;
+            animation: scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .countdown-num {
+            font-size: 6rem;
+            font-weight: 800;
+            color: var(--color-primary);
+            animation: countPop 1s infinite;
+        }
+
+        /* Results Design */
+        .results-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, var(--color-success), var(--color-primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-box {
+            background: rgba(0,0,0,0.15);
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-box .label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .stat-box .val {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-top: 5px;
+        }
+
+        .stat-box.highlight {
+            grid-column: span 2;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+        .stat-box.highlight .val {
+            color: var(--color-success);
+            font-size: 2.2rem;
+        }
+
+        .round-list {
+            text-align: left;
+            margin-bottom: 25px;
+            max-height: 150px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .round-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 12px;
+            border-bottom: 1px solid rgba(250,250,250,0.05);
+            font-size: 0.9rem;
+        }
+
+        .btn-action {
+            background: var(--color-primary);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+            transition: all 0.2s;
+            width: 100%;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        /* Celebration Effect Layer */
+        .celebration-layer {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 15;
+            display: none;
+        }
+
+        /* Keyframe Animations */
+        @keyframes pulseBg {
+            0% { background-color: rgba(239, 68, 68, 0.02); }
+            50% { background-color: rgba(239, 68, 68, 0.08); }
+            100% { background-color: rgba(239, 68, 68, 0.02); }
+        }
+
+        @keyframes flashEffect {
+            0% { filter: brightness(1.8); }
+            100% { filter: brightness(1); }
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes countPop {
+            0% { transform: scale(0.8); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes particleDrop {
+            0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            animation: particleDrop 2.5s ease-out forwards;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">REFLEX//PRO</div>
+        <div class="controls">
+            <div class="high-score-badge">🏆 Best Avg: <span id="high-score-val">--</span></div>
+            <button class="theme-btn" id="theme-toggle" title="Toggle Theme">🌓</button>
+        </div>
+    </header>
+
+    <main class="game-arena" id="click-arena">
+        
+        <div class="center-content">
+            <div class="main-instruction" id="main-text">Tap Anywhere to Begin</div>
+            <div class="sub-instruction" id="sub-text">Best of 5 round reflex examination series.</div>
+            
+            <div class="progress-container" id="dots-container">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+        </div>
+
+        <div class="overlay-card" id="countdown-card">
+            <div class="sub-instruction" style="margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px;">Prepare Yourself</div>
+            <div class="countdown-num" id="countdown-number">3</div>
+        </div>
+
+        <div class="overlay-card" id="results-card">
+            <div class="results-title">Series Analysis</div>
+            <div class="stats-grid">
+                <div class="stat-box highlight">
+                    <div class="label">Series Average</div>
+                    <div class="val" id="res-avg">--</div>
+                </div>
+                <div class="stat-box">
+                    <div class="label">Best Reaction</div>
+                    <div class="val" id="res-best">--</div>
+                </div>
+                <div class="stat-box">
+                    <div class="label">Personal Best</div>
+                    <div class="val" id="res-record">--</div>
+                </div>
+            </div>
+            <div class="round-list" id="res-list"></div>
+            <button class="btn-action" id="btn-restart">Run Series Again</button>
+        </div>
+
+        <div class="celebration-layer" id="celebration-box"></div>
+    </main>
+
+    <script>
+        // Game Engine States
+        const GameState = { IDLE: 0, COUNTDOWN: 1, DELAY: 2, TRIGGERED: 3, PENALTY: 4, COMPLETE: 5 };
+        let currentGameState = GameState.IDLE;
+
+        let currentRound = 0;
+        const totalRounds = 5;
+        let roundScores = [];
+        let delayTimeout = null;
+        let countdownInterval = null;
+        let signalStartTime = 0;
+        let globalBestAverage = localStorage.getItem('reflex_pro_best_avg') || null;
+
+        // UI Binding
+        const arena = document.getElementById('click-arena');
+        const mainText = document.getElementById('main-text');
+        const subText = document.getElementById('sub-text');
+        const themeToggle = document.getElementById('theme-toggle');
+        const highScoreDisplay = document.getElementById('high-score-val');
+        const dots = document.querySelectorAll('.dot');
+        
+        const countdownCard = document.getElementById('countdown-card');
+        const countdownNumber = document.getElementById('countdown-number');
+        
+        const resultsCard = document.getElementById('results-card');
+        const resAvg = document.getElementById('res-avg');
+        const resBest = document.getElementById('res-best');
+        const resRecord = document.getElementById('res-record');
+        const resList = document.getElementById('res-list');
+        const btnRestart = document.getElementById('btn-restart');
+        const celebrationBox = document.getElementById('celebration-box');
+
+        // Audio System (Web Audio API)
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playSynthesizedSound(frequency, type, duration, volume = 0.1) {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            
+            osc.type = type;
+            osc.frequency.setValueAtTime(frequency, audioCtx.currentTime);
+            gainNode.gain.setValueAtTime(volume, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+            
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + duration);
+        }
+
+        // Initialize Stats Dashboard
+        if (globalBestAverage) highScoreDisplay.innerText = `${globalBestAverage}ms`;
+
+        // Theme Toggle Implementation
+        themeToggle.addEventListener('click', (e) => {
+            e.stopPropagation(); // Block triggers to arena clicking mechanics
+            const activeTheme = document.documentElement.getAttribute('data-theme');
+            if (activeTheme === 'light') {
+                document.documentElement.removeAttribute('data-theme');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        });
+
+        // Main State Routing Logic
+        function setGameState(state) {
+            currentGameState = state;
+            arena.className = 'game-arena'; // wipe context state classes
+
+            switch(state) {
+                case GameState.IDLE:
+                    mainText.innerText = "Tap Anywhere to Begin";
+                    subText.innerText = "Best of 5 round reflex examination series.";
+                    resultsCard.classList.remove('active');
+                    celebrationBox.style.display = 'none';
+                    currentRound = 0;
+                    roundScores = [];
+                    syncProgressBar();
+                    break;
+
+                case GameState.COUNTDOWN:
+                    resultsCard.classList.remove('active');
+                    countdownCard.classList.add('active');
+                    runCountdownSequence(() => {
+                        countdownCard.classList.remove('active');
+                        setGameState(GameState.DELAY);
+                    });
+                    break;
+
+                case GameState.DELAY:
+                    arena.classList.add('state-waiting');
+                    mainText.innerText = "HOLD IT...";
+                    subText.innerText = "Wait dynamically for the neon flashing green burst.";
+                    syncProgressBar();
+                    
+                    const dynamicDelay = Math.random() * 3000 + 2000; // 2 to 5 seconds
+                    delayTimeout = setTimeout(() => {
+                        setGameState(GameState.TRIGGERED);
+                    }, dynamicDelay);
+                    break;
+
+                case GameState.TRIGGERED:
+                    arena.classList.add('state-go');
+                    mainText.innerText = "GO!";
+                    subText.innerText = "CLICK NOW! CLICK NOW!";
+                    playSynthesizedSound(587.33, 'sine', 0.2, 0.15); // D5 high syncopation node
+                    signalStartTime = performance.now();
+                    break;
+
+                case GameState.PENALTY:
+                    clearTimeout(delayTimeout);
+                    arena.classList.add('state-penalty');
+                    mainText.innerText = "Too Early! ❌";
+                    subText.innerText = "Penalty detected. Let's restart this round safely.";
+                    playSynthesizedSound(130.81, 'sawtooth', 0.4, 0.2); // C3 harsh correction node
+                    dots[currentRound].className = 'dot error';
+                    
+                    setTimeout(() => {
+                        setGameState(GameState.COUNTDOWN);
+                    }, 1800);
+                    break;
+
+                case GameState.COMPLETE:
+                    renderResultsDashboard();
+                    break;
+            }
+        }
+
+        // Live Round Progress Indicators Synchronization
+        function syncProgressBar() {
+            dots.forEach((dot, idx) => {
+                if (idx === currentRound && currentGameState !== GameState.IDLE) {
+                    dot.className = 'dot active';
+                } else if (idx < currentRound) {
+                    dot.className = 'dot done';
+                } else {
+                    dot.className = 'dot';
+                }
+            });
+        }
+
+        // Countdown Step Flow Control
+        function runCountdownSequence(completionCallback) {
+            let count = 3;
+            countdownNumber.innerText = count;
+            playSynthesizedSound(329.63, 'sine', 0.08, 0.1); // E4 countdown blip
+            
+            clearInterval(countdownInterval);
+            countdownInterval = setInterval(() => {
+                count--;
+                if(count > 0) {
+                    countdownNumber.innerText = count;
+                    playSynthesizedSound(329.63, 'sine', 0.08, 0.1);
+                } else {
+                    clearInterval(countdownInterval);
+                    completionCallback();
+                }
+            }, 800);
+        }
+
+        // Processing Input Taps inside the Arena Zone
+        arena.addEventListener('mousedown', handleInteractionInput);
+        arena.addEventListener('touchstart', (e) => {
+            e.preventDefault(); // mitigate mobile double tap latency
+            handleInteractionInput();
+        });
+
+        function handleInteractionInput() {
+            if (currentGameState === GameState.IDLE) {
+                setGameState(GameState.COUNTDOWN);
+            }
+            else if (currentGameState === GameState.DELAY) {
+                setGameState(GameState.PENALTY);
+            }
+            else if (currentGameState === GameState.TRIGGERED) {
+                const clickTime = performance.now();
+                const reactionMs = Math.round(clickTime - signalStartTime);
+                
+                roundScores.push(reactionMs);
+                playSynthesizedSound(440, 'sine', 0.1, 0.1); // A4 clean success indicator
+                
+                mainText.innerText = `${reactionMs} ms`;
+                subText.innerText = "Excellent. Click anywhere to proceed forward.";
+                dots[currentRound].className = 'dot done';
+                
+                currentRound++;
+                currentGameState = GameState.IDLE; // placeholder lock state temporarily
+                
+                if (currentRound >= totalRounds) {
+                    setTimeout(() => setGameState(GameState.COMPLETE), 600);
+                } else {
+                    setTimeout(() => {
+                        mainText.innerText = "Click to Advance Round";
+                        subText.innerText = `Ready to cycle into round #${currentRound + 1}`;
+                    }, 400);
+                }
+            }
+            else if (currentGameState === GameState.IDLE && currentRound > 0 && currentRound < totalRounds) {
+                setGameState(GameState.COUNTDOWN);
+            }
+        }
+
+        // Compile and Render Final Statistics Dashboard View
+        function renderResultsDashboard() {
+            const sum = roundScores.reduce((a, b) => a + b, 0);
+            const average = Math.round(sum / totalRounds);
+            const bestScore = Math.min(...roundScores);
+            
+            // Validate Personal High Records
+            if (!globalBestAverage || average < globalBestAverage) {
+                globalBestAverage = average;
+                localStorage.setItem('reflex_pro_best_avg', average);
+                highScoreDisplay.innerText = `${average}ms`;
+                triggerCelebrationParticles();
+            }
+
+            resAvg.innerText = `${average} ms`;
+            resBest.innerText = `${bestScore} ms`;
+            resRecord.innerText = `${globalBestAverage} ms`;
+
+            // Enumerate round break logs cleanly
+            resList.innerHTML = '';
+            roundScores.forEach((score, index) => {
+                const item = document.createElement('div');
+                item.className = 'round-item';
+                item.innerHTML = `<span>⚡ Round ${index + 1}</span> <strong>${score} ms</strong>`;
+                resList.appendChild(item);
+            });
+
+            resultsCard.classList.add('active');
+        }
+
+        // Confetti Celebration Generator Module
+        function triggerCelebrationParticles() {
+            celebrationBox.style.display = 'block';
+            celebrationBox.innerHTML = '';
+            const palette = ['#3b82f6', '#10b981', '#ef4444', '#f59e0b', '#a855f7'];
+            
+            for(let i=0; i < 75; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'confetti';
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * -20}px`;
+                particle.style.backgroundColor = palette[Math.floor(Math.random() * palette.length)];
+                particle.style.transform = `scale(${Math.random() * 0.6 + 0.5})`;
+                particle.style.animationDelay = `${Math.random() * 1.5}s`;
+                celebrationBox.appendChild(particle);
+            }
+        }
+
+        // Restart Handler Binding Link
+        btnRestart.addEventListener('click', (e) => {
+            e.stopPropagation();
+            setGameState(GameState.IDLE);
+        });
+    </script>
+</body>
+</html>

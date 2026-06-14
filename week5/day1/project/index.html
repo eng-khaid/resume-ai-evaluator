@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ Reflex Pro // Neural Tester</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #0b0f19;
+            --bg-card: #151d30;
+            --text-main: #f1f5f9;
+            --text-muted: #64748b;
+            --color-primary: #3b82f6; /* Electric Blue */
+            --color-success: #10b981; /* Mint Green */
+            --color-error: #ef4444;   /* Coral / Red */
+            --color-accent: #f59e0b;  /* Amber */
+            --shadow-glow: rgba(59, 130, 246, 0.2);
+            --transition-speed: 0.3s;
+        }
+
+        [data-theme="light"] {
+            --bg-base: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --color-primary: #2563eb;
+            --color-success: #059669;
+            --color-error: #dc2626;
+            --color-accent: #d97706;
+            --shadow-glow: rgba(37, 99, 235, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+            overflow: hidden;
+        }
+            transition: var(--transition);
+
+            overflow: hidden;

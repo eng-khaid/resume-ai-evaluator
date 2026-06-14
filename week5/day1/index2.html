@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ NEUROSTRIKE // Ultimate Reaction Lab</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #060913;
+            --bg-surface: #0f1524;
+            --bg-surface-glow: rgba(0, 210, 255, 0.15);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --clr-prime: #00d2ff;     /* Neon Cyan */
+            --clr-success: #00ff87;   /* Cyber Mint */
+            --clr-error: #ff4757;     /* Neon Coral */
+            --clr-warn: #ffa502;      /* Neon Gold */
+            --glow: 0 0 20px var(--clr-prime);
+            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        [data-theme="light"] {
+            --bg-body: #f4f6fa;
+            --bg-surface: #ffffff;
+            --bg-surface-glow: rgba(37, 99, 235, 0.05);
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --clr-prime: #2563eb;     /* Deep Royal Blue */
+            --clr-success: #059669;   /* Forest Emerald */
+            --clr-error: #d63031;     /* Rich Crimson */
+            --clr-warn: #e15f41;      /* Terracotta */
+            --glow: 0 10px 25px rgba(37, 99, 235, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Space Grotesk', sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+            overflow: hidden;
+        }
+
+        /* Luxury Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 40px;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            background: rgba(6, 9, 19, 0.2);
+            backdrop-filter: blur(12px);
+        }
+
+        [data-theme="light"] header {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            background: rgba(244, 246, 250, 0.2);
+        }
+
+        .brand-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.6rem;
+            letter-spacing: -0.5px;
+            background: linear-gradient(90deg, var(--clr-prime), #9b51e0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .badge-pulse {
+            width: 8px;
+            height: 8px;
+            background-color: var(--clr-success);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--clr-success);
+        }
+
+        .action-bar {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .stat-capsule {
+            background: var(--bg-surface);
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: var(--glow);
+            transition: var(--transition);
+        }
+
+        [data-theme="light"] .stat-capsule {
+            border: 1px solid rgba(0, 0, 0, 0.03);
+        }
+
+        .theme-toggle-btn {
+            background: var(--bg-surface);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        [data-theme="light"] .theme-toggle-btn {
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .theme-toggle-btn:hover {
+            transform: rotate(15deg) scale(1.05);
+        }
+
+        /* Immersive Interaction Screen */
+        .main-arena {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 40px;
+            cursor: pointer;
+        }
+
+        .arena-canvas {
+            width: 100%;
+            max-width: 850px;
+            height: 450px;
+            background: var(--bg-surface);
+            border-radius: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4), inset 0 0 40px rgba(255,255,255,0.01);
+            transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+        }
+
+        [data-theme="light"] .arena-canvas {
+            border: 1px solid rgba(0, 0, 0, 0.02);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.05);
+        }
+
+        /* State System Injection Classes */
+        .arena-canvas.state-hold {
+            background-color: rgba(255, 71, 87, 0.03);
+            border-color: rgba(255, 71, 87, 0.2);
+            animation: pulseSystem 3s infinite;
+        }
+
+        .arena-canvas.state-burst {
+            background: linear-gradient(135deg, var(--clr-success) 0%, #00b894 100%) !important;
+            border-color: var(--clr-success);
+            box-shadow: 0 0 80px rgba(0, 255, 135, 0.3);
+        }
+
+        .arena-canvas.state-burst * {
+            color: #ffffff !important;
+        }
+
+        .arena-canvas.state-clicked {
+            transform: scale(0.98);
+        }
+
+        .central-hubs {
+            text-align: center;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .macro-text {
+            font-size: 3.5rem;
+            font-weight: 700;
+            letter-spacing: -1.5px;
+            margin-bottom: 12px;
+            line-height: 1.1;
+        }
+
+        .micro-text {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        /* Metric Dashboard Tracker */
+        .round-tracker {
+            position: absolute;
+            bottom: 35px;
+            display: flex;
+            gap: 14px;
+        }
+
+        .pill-indicator {
+            width: 45px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        [data-theme="light"] .pill-indicator {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .pill-indicator.current {
+            background: var(--clr-prime);
+            box-shadow: var(--glow);
+            width: 65px;
+        }
+
+        .pill-indicator.passed {
+            background: var(--clr-success);
+        }
+
+        .pill-indicator.faulted {
+            background: var(--clr-error);
+        }
+
+        /* Overlay Systems (Countdown, Dashboard) */
+        .glass-overlay {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0; left: 0;
+            background: var(--bg-surface);
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            border-radius: 32px;
+        }
+
+        .glass-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .giant-ticker {
+            font-size: 8rem;
+            font-weight: 700;
+            color: var(--clr-prime);
+            animation: zoomPop 0.8s infinite;
+        }
+
+        /* Advanced Laboratory Metrics Dashboard */
+        .dashboard-container {
+            width: 100%;
+            max-width: 700px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .rank-banner {
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--clr-warn);
+            font-weight: 700;
+        }
+
+        .grid-analytics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .metric-card {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.03);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        [data-theme="light"] .metric-card {
+            background: rgba(0,0,0,0.02);
+            border: 1px solid rgba(0,0,0,0.02);
+        }
+
+        .metric-card.heroic {
+            grid-column: span 3;
+            background: var(--bg-surface-glow);
+            border-color: rgba(0, 210, 255, 0.1);
+        }
+
+        .metric-card .lbl {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .metric-card .num {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .metric-card.heroic .num {
+            font-size: 3.2rem;
+            color: var(--clr-prime);
+        }
+
+        .btn-prime-action {
+            background: var(--clr-prime);
+            color: #060913;
+            border: none;
+            padding: 16px 40px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--glow);
+        }
+
+        [data-theme="light"] .btn-prime-action {
+            color: #ffffff;
+        }
+
+        .btn-prime-action:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0, 210, 255, 0.3);
+        }
+
+        /* Particle Blast Canvas */
+        .vfx-layer {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 40;
+        }
+
+        /* Animations Framework */
+        @keyframes pulseSystem {
+            0% { box-shadow: 0 30px 60px rgba(0,0,0,0.4); }
+            50% { box-shadow: 0 30px 60px rgba(255, 47, 87, 0.05); border-color: rgba(255, 47, 87, 0.1); }
+            100% { box-shadow: 0 30px 60px rgba(0,0,0,0.4); }
+        }
+
+        @keyframes zoomPop {
+            0% { transform: scale(0.7); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: scale(1.1); opacity: 0; }
+        }
+
+        @keyframes particleFly {
+            0% { transform: translate(0, 0) scale(1); opacity: 1; }
+            100% { transform: translate(var(--x), var(--y)) scale(0); opacity: 0; }
+        }
+
+        .vfx-spark {
+            position: absolute;
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            animation: particleFly 1.2s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand-wrapper">
+            <div class="badge-pulse"></div>
+            <div class="logo">NEUROSTRIKE Labs</div>
+        </div>
+        <div class="action-bar">
+            <div class="stat-capsule">👑 Best Average: <span id="high-score-val">--</span></div>
+            <button class="theme-toggle-btn" id="theme-trigger">🌓</button>
+        </div>
+    </header>
+
+    <main class="main-arena">
+        <div class="arena-canvas" id="interactive-canvas">
+            
+            <div class="central-hubs">
+                <div class="macro-text" id="hud-title">Click to Initialize</div>
+                <div class="micro-text" id="hud-desc">Calibrate your reflexes. 5-round diagnostic process.</div>
+            </div>
+
+            <div class="round-tracker" id="progress-hub">
+                <div class="pill-indicator"></div>
+                <div class="pill-indicator"></div>
+                <div class="pill-indicator"></div>
+                <div class="pill-indicator"></div>
+                <div class="pill-indicator"></div>
+            </div>
+
+            <!-- Countdown Sequence Overlay -->
+            <div class="glass-overlay" id="countdown-overlay">
+                <div class="giant-ticker" id="countdown-ticker">3</div>
+            </div>
+
+            <!-- Precision Analytics Overlay Dashboard -->
+            <div class="glass-overlay" id="dashboard-overlay">
+                <div class="dashboard-container">
+                    <div>
+                        <div class="rank-banner" id="dash-rank">Analyzing...</div>
+                        <h2 style="font-size: 2.2rem; font-weight: 700; margin-top: 5px;">Diagnostic Complete</h2>
+                    </div>
+                    <div class="grid-analytics">
+                        <div class="metric-card heroic">
+                            <div class="lbl">Neural Score Average</div>
+                            <div class="num" id="dash-avg">--</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="lbl">Peak Reflex</div>
+                            <div class="num" id="dash-best">--</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="lbl">Consistency</div>
+                            <div class="num" id="dash-stability">--</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="lbl">Global Target</div>
+                            <div class="num">215 ms</div>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="btn-prime-action" id="restart-trigger">Re-Calibrate System</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visual VFX System Canvas -->
+            <div class="vfx-layer" id="vfx-canvas"></div>
+        </div>
+    </main>
+
+    <script>
+        // System Core Architecture States
+        const EngineState = { DISENGAGED: 'disengaged', COUNTDOWN: 'countdown', COCKED: 'cocked', STRIKE: 'strike', FAULT: 'fault', REPORT: 'report' };
+        let systemState = EngineState.DISENGAGED;
+
+        let activeRound = 0;
+        const totalCycles = 5;
+        let diagnosticMetrics = [];
+        let executionTimeout = null;
+        let tickerInterval = null;
+        let timeStampOrigin = 0;
+        let storagePersonalBest = localStorage.getItem('neurostrike_v2_best') || null;
+
+        // Document Bindings
+        const canvas = document.getElementById('interactive-canvas');
+        const hudTitle = document.getElementById('hud-title');
+        const hudDesc = document.getElementById('hud-desc');
+        const themeTrigger = document.getElementById('theme-trigger');
+        const highScoreVal = document.getElementById('high-score-val');
+        const pills = document.querySelectorAll('.pill-indicator');
+        
+        const countdownOverlay = document.getElementById('countdown-overlay');
+        const countdownTicker = document.getElementById('countdown-ticker');
+        
+        const dashboardOverlay = document.getElementById('dashboard-overlay');
+        const dashRank = document.getElementById('dash-rank');
+        const dashAvg = document.getElementById('dash-avg');
+        const dashBest = document.getElementById('dash-best');
+        const dashStability = document.getElementById('dash-stability');
+        const restartTrigger = document.getElementById('restart-trigger');
+        const vfxCanvas = document.getElementById('vfx-canvas');
+
+        // Cinematic Audio Synthesizer (Web Audio Engine)
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        function emitSoundNode(freq, wave, duration, amplitude = 0.1) {
+            if (audioContext.state === 'suspended') audioContext.resume();
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            
+            osc.type = wave;
+            osc.frequency.setValueAtTime(freq, audioContext.currentTime);
+            gain.gain.setValueAtTime(amplitude, audioContext.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.00001, audioContext.currentTime + duration);
+            
+            osc.connect(gain);
+            gain.connect(audioContext.destination);
+            osc.start();
+            osc.stop(audioContext.currentTime + duration);
+        }
+
+        // Apply Local Cache States
+        if (storagePersonalBest) highScoreVal.innerText = `${storagePersonalBest} ms`;
+
+        // Elite Premium Dark/Light Controller
+        themeTrigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            if (currentTheme === 'light') {
+                document.documentElement.removeAttribute('data-theme');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        });
+
+        // Micro-Engine Core Router State Router
+        function dispatchState(targetState, evaluationParam = null) {
+            systemState = targetState;
+            canvas.className = 'arena-canvas'; // clear canvas flags
+
+            switch(targetState) {
+                case EngineState.DISENGAGED:
+                    hudTitle.innerText = "Click to Initialize";
+                    hudDesc.innerText = "Calibrate your reflexes. 5-round diagnostic process.";
+                    dashboardOverlay.classList.remove('active');
+                    activeRound = 0;
+                    diagnosticMetrics = [];
+                    refreshProgressHUD();
+                    break;
+
+                case EngineState.COUNTDOWN:
+                    dashboardOverlay.classList.remove('active');
+                    countdownOverlay.classList.add('active');
+                    executePrecisionCountdown(() => {
+                        countdownOverlay.classList.remove('active');
+                        dispatchState(EngineState.COCKED);
+                    });
+                    break;
+
+                case EngineState.COCKED:
+                    canvas.classList.add('state-hold');
+                    hudTitle.innerText = "STEADY...";
+                    hudDesc.innerText = "Anticipate the neural connection burst window.";
+                    refreshProgressHUD();
+                    
+                    const temporalDelay = Math.random() * 2500 + 2000; // 2s - 4.5s variation
+                    executionTimeout = setTimeout(() => {
+                        dispatchState(EngineState.STRIKE);
+                    }, temporalDelay);
+                    break;
+
+                case EngineState.STRIKE:
+                    canvas.classList.add('state-burst');
+                    hudTitle.innerText = "STRIKE!";
+                    hudDesc.innerText = "FIRE CHIP REFLEX NOW!";
+                    emitSoundNode(659.25, 'triangle', 0.15, 0.15); // E5 high synth ping
+                    timeStampOrigin = performance.now();
+                    break;
+
+                case EngineState.FAULT:
+                    clearTimeout(executionTimeout);
+                    canvas.classList.add('state-hold');
+                    hudTitle.innerText = "System Fault ⚠️";
+                    hudDesc.innerText = "Premature neural firing detected. Recalibrating loop...";
+                    emitSoundNode(98.00, 'sawtooth', 0.35, 0.25); // G2 abrasive alarm node
+                    pills[activeRound].className = 'pill-indicator faulted';
+                    
+                    setTimeout(() => {
+                        dispatchState(EngineState.COUNTDOWN);
+                    }, 1600);
+                    break;
+
+                case EngineState.REPORT:
+                    generateAnalyticsDashboard();
+                    break;
+            }
+        }
+
+        // Live HUD Metrics Interface Sync
+        function refreshProgressHUD() {
+            pills.forEach((pill, idx) => {
+                if (idx === activeRound && systemState !== EngineState.DISENGAGED) {
+                    pill.className = 'pill-indicator current';
+                } else if (idx < activeRound) {
+                    pill.className = 'pill-indicator passed';
+                } else {
+                    pill.className = 'pill-indicator';
+                }
+            });
+        }
+
+        // High Precision Timing Loop
+        function executePrecisionCountdown(callbackDone) {
+            let tickerValue = 3;
+            countdownTicker.innerText = tickerValue;
+            emitSoundNode(440, 'sine', 0.05, 0.1); // A4 sync beat
+            
+            clearInterval(tickerInterval);
+            tickerInterval = setInterval(() => {
+                tickerValue--;
+                if(tickerValue > 0) {
+                    countdownTicker.innerText = tickerValue;
+                    emitSoundNode(440, 'sine', 0.05, 0.1);
+                } else {
+                    clearInterval(tickerInterval);
+                    callbackDone();
+                }
+            }, 750);
+        }
+
+        // Capturing Real-time User Vectors
+        canvas.addEventListener('mousedown', interpretTriggerMatrix);
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            interpretTriggerMatrix();
+        });
+
+        function interpretTriggerMatrix() {
+            canvas.classList.add('state-clicked');
+            setTimeout(() => canvas.classList.remove('state-clicked'), 800);
+
+            if (systemState === EngineState.DISENGAGED) {
+                dispatchState(EngineState.COUNTDOWN);
+            }
+            else if (systemState === EngineState.COCKED) {
+                dispatchState(EngineState.FAULT);
+            }
+            else if (systemState === EngineState.STRIKE) {
+                const vectorEnd = performance.now();
+                const latencyDelta = Math.round(vectorEnd - timeStampOrigin);
+                
+                diagnosticMetrics.push(latencyDelta);
+                emitSoundNode(523.25, 'sine', 0.08, 0.12); // C5 sharp affirmation node
+                
+                hudTitle.innerText = `${latencyDelta} ms`;
+                hudDesc.innerText = "Metric verified. Tap inside perimeter to continue.";
+                pills[activeRound].className = 'pill-indicator passed';
+                
+                activeRound++;
+                systemState = EngineState.DISENGAGED; // Lock out action channel safely
+                
+                if (activeRound >= totalCycles) {
+                    setTimeout(() => dispatchState(EngineState.REPORT), 500);
+                } else {
+                    setTimeout(() => {
+                        hudTitle.innerText = "Advance Cycle";
+                        hudDesc.innerText = `System primed to bridge into cycle #${activeRound + 1}`;
+                    }, 350);
+                }
+            }
+            else if (systemState === EngineState.DISENGAGED && activeRound > 0 && activeRound < totalCycles) {
+                dispatchState(EngineState.COUNTDOWN);
+            }
+        }
+
+        // Elite Advanced Analytics Tabulation Engine
+        function generateAnalyticsDashboard() {
+            const sumValues = diagnosticMetrics.reduce((a, b) => a + b, 0);
+            const dynamicAverage = Math.round(sumValues / totalCycles);
+            const absolutePeak = Math.min(...diagnosticMetrics);
+            
+            // Derive Consistency Stability Factor
+            const variance = Math.round(Math.max(...diagnosticMetrics) - absolutePeak);
+            let stabilityProfile = "Stable Peak";
+            if (variance > 80) stabilityProfile = "Highly Volatile";
+            else if (variance > 40) stabilityProfile = "Moderate Sync";
+
+            // Rank Badge Algorithm
+            let tierRank = "Neural Recruit";
+            if (dynamicAverage < 170) tierRank = "God Mode // Alpha";
+            else if (dynamicAverage < 210) tierRank = "Superhuman Reflex";
+            else if (dynamicAverage < 250) tierRank = "Elite Operative";
+
+            // Process Cache Targets
+            if (!storagePersonalBest || dynamicAverage < storagePersonalBest) {
+                storagePersonalBest = dynamicAverage;
+                localStorage.setItem('neurostrike_v2_best', dynamicAverage);
+                highScoreVal.innerText = `${dynamicAverage} ms`;
+                injectHighVelocityParticles();
+            }
+
+            dashRank.innerText = tierRank;
+            dashAvg.innerText = `${dynamicAverage} ms`;
+            dashBest.innerText = `${absolutePeak} ms`;
+            dashStability.innerText = `${stabilityProfile} (±${variance}ms)`;
+
+            dashboardOverlay.classList.add('active');
+        }
+
+        // VFX Vector Burst Canvas Simulation Module
+        function injectHighVelocityParticles() {
+            vfxCanvas.innerHTML = '';
+            const hexTiers = ['#00d2ff', '#00ff87', '#9b51e0', '#ffa502'];
+            
+            for(let i=0; i < 90; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'vfx-spark';
+                particle.style.left = '50%';
+                particle.style.top = '50%';
+                particle.style.backgroundColor = hexTiers[Math.floor(Math.random() * hexTiers.length)];
+                
+                // Random explosion angles
+                const rad = Math.random() * Math.PI * 2;
+                const distance = Math.random() * 350 + 100;
+                const x = Math.cos(rad) * distance;
+                const y = Math.sin(rad) * distance;
+                
+                particle.style.setProperty('--x', `${x}px`);
+                particle.style.setProperty('--y', `${y}px`);
+                particle.style.animationDelay = `${Math.random() * 0.15}s`;
+                vfxCanvas.appendChild(particle);
+            }
+        }
+
+        // Restart Loop Binding Hook
+        restartTrigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dispatchState(EngineState.DISENGAGED);
+        });
+    </script>
+</body>
+</html>

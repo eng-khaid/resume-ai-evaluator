@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ NEUROSTRIKE // Ultimate Reaction Lab</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #060913;
+            --bg-surface: #0f1524;
+            --bg-surface-glow: rgba(0, 210, 255, 0.15);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --clr-prime: #00d2ff;     /* Neon Cyan */
+            --clr-success: #00ff87;   /* Cyber Mint */
+            --clr-error: #ff4757;     /* Neon Coral */
+            --clr-warn: #ffa502;      /* Neon Gold */
+            --glow: 0 0 20px var(--clr-prime);
+            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        [data-theme="light"] {
+            --bg-body: #f4f6fa;
+            --bg-surface: #ffffff;
+            --bg-surface-glow: rgba(37, 99, 235, 0.05);
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --clr-prime: #2563eb;     /* Deep Royal Blue */
+            --clr-success: #059669;   /* Forest Emerald */
+            --clr-error: #d63031;     /* Rich Crimson */
+            --clr-warn: #e15f41;      /* Terracotta */
+            --glow: 0 10px 25px rgba(37, 99, 235, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Space Grotesk', sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+            overflow: hidden;
+        }
+
+        /* Luxury Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 40px;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            background: rgba(6, 9, 19, 0.2);
+            backdrop-filter: blur(12px);
+        }
+
+        [data-theme="light"] header {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            background: rgba(244, 246, 250, 0.2);
+        }
+
+        .brand-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.6rem;
+            letter-spacing: -0.5px;
+            background: linear-gradient(90deg, var(--clr-prime), #9b51e0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .badge-pulse {
+            width: 8px;
+            height: 8px;
+            background-color: var(--clr-success);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--clr-success);
+        }
+
+        .action-bar {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .stat-capsule {
+            background: var(--bg-surface);
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: var(--glow);
+            transition: var(--transition);
+        }
+
+        [data-theme="light"] .stat-capsule {
+            border: 1px solid rgba(0, 0, 0, 0.03);
+        }
+
+        .theme-toggle-btn {
+            background: var(--bg-surface);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        [data-theme="light"] .theme-toggle-btn {
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .theme-toggle-btn:hover {
+            transform: rotate(15deg) scale(1.05);
+        }
+
+        /* Immersive Interaction Screen */
+        .main-arena {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 40px;
+            cursor: pointer;
+        }
+
+        .arena-canvas {
+            width: 100%;
+            max-width: 850px;
+            height: 450px;
+            background: var(--bg-surface);
+            border-radius: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4), inset 0 0 40px rgba(255,255,255,0.01);
+            transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+        }
+
+        [data-theme="light"] .arena-canvas {
+            border: 1px solid rgba(0, 0, 0, 0.02);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.05);
+        }
+
+        /* State System Injection Classes */
+        .arena-canvas.state-hold {
+            background-color: rgba(255, 71, 87, 0.03);
+            border-color: rgba(255, 71, 87, 0.2);
+            animation: pulseSystem 3s infinite;
+        }
+
+        .arena-canvas.state-burst {
+            background: linear-gradient(135deg, var(--clr-success) 0%, #00b894 100%) !important;
+            border-color: var(--clr-success);
+            box-shadow: 0 0 80px rgba(0, 255, 135, 0.3);
+        }
+
+        .arena-canvas.state-burst * {
+            color: #ffffff !important;
+        }
+
+        .arena-canvas.state-clicked {
+            transform: scale(0.98);
+        }
+
+        .central-hubs {
+            text-align: center;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .macro-text {
+            font-size: 3.5rem;
+            font-weight: 700;
+            letter-spacing: -1.5px;
+            margin-bottom: 12px;
+            line-height: 1.1;
+        }
+
+        .micro-text {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        /* Metric Dashboard Tracker */
+        .round-tracker {
+            position: absolute;
+            bottom: 35px;
+            display: flex;
+            gap: 14px;
+        }
+
+        .pill-indicator {
+            width: 45px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        [data-theme="light"] .pill-indic
